@@ -8,7 +8,7 @@ const products = [
       variants: [
         { size: "S", color: "blue", stock: 10 },
         { size: "M", color: "blue", stock: 5 },
-        { size: "L", color: "blue", stock: 0 }  // Sold out
+        { size: "L", color: "blue", stock: 0 } 
       ],
       images: ["url_to_image1.jpg", "url_to_image2.jpg"]
     },

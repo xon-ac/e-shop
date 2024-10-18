@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/data/test-data/reviews');
 
 const getReviewById = async (id) => {
   return db.query('SELECT * FROM reviews WHERE id = $1', [id]);

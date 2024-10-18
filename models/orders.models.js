@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/data/test-data/orders');
 
 const getOrderById = async (id) => {
   return db.query('SELECT * FROM orders WHERE id = $1', [id]);

@@ -1,12 +1,12 @@
 const app = require("../app");
 const request = require('supertest');
-const users = require('./testData/users');
 
 const products = require('../db/data/test-data/products');
 const users = require('../db/data/test-data/users');
 const reviews = require('../db/data/test-data/reviews');
 const orders = require('../db/data/test-data/orders');
-const addresses = require('../db/data/test-data/adresses');
+const addresses = require('../db/data/test-data/addresses');
+const baskets = require('../db/data/test-data/baskets');
 
 describe('Product Endpoints', () => {
   it('should fetch all products', async () => {
@@ -45,7 +45,7 @@ describe('Address Endpoints', () => {
   it('should fetch all addresses for a user', async () => {
     const res = await request(app).get('/users/1/addresses');
     expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toBe(2); 
+    expect(res.body.length).toBe(addresses.length);
     expect(res.body[0]).toHaveProperty('postalCode', addresses[0].postalCode);
   });
 
@@ -83,3 +83,61 @@ describe('Orders Endpoints', () => {
   });
 });
 
+describe('Reviews Endpoints', () => {
+  it('should fetch all reviews for a product', async () => {
+    const res = await request(app).get('/products/1/reviews');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toBe(reviews.filter(r => r.product_id === 1).length);
+  });
+
+  it('should fetch a review by ID', async () => {
+    const res = await request(app).get('/reviews/1');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('rating', reviews[0].rating);
+  });
+
+  it('should create a new review', async () => {
+    const newReview = {
+      user_id: 1,
+      product_id: 1,
+      rating: 5,
+      comment: "Excellent product!"
+    };
+    const res = await request(app).post('/reviews').send(newReview);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty('id');
+  });
+
+  it('should delete a review', async () => {
+    const res = await request(app).delete('/reviews/1');
+    expect(res.statusCode).toEqual(204);
+  });
+});
+
+describe('Basket Endpoints', () => {
+  it('should fetch a user\'s basket', async () => {
+    const res = await request(app).get('/basket/1');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toBe(baskets.filter(b => b.user_id === 1).length);
+  });
+
+  it('should add a product to the basket', async () => {
+    const newItem = {
+      userId: 1,
+      productId: 1
+    };
+    const res = await request(app).post('/basket').send(newItem);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty('id');
+  });
+
+  it('should remove a product from the basket', async () => {
+    const res = await request(app).delete('/basket/1/product').send({ productId: 1 });
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it('should clear a user\'s basket', async () => {
+    const res = await request(app).delete('/basket/1');
+    expect(res.statusCode).toEqual(204);
+  });
+});

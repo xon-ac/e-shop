@@ -1,5 +1,5 @@
 const express = require('express');
-const reviewController = require('../controllers/reviewController');
+const reviewController = require('../controllers/reviews.controllers');
 const router = express.Router();
 
 router.get('/product/:productId', reviewController.getReviewsByProductId);
