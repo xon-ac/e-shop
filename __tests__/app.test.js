@@ -55,6 +55,31 @@ describe('Address Endpoints', () => {
   });
 });
 
+describe('Orders Endpoints', () => {
+  it('should fetch all orders for a user', async () => {
+    const res = await request(app).get('/users/1/orders');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
 
+  it('should place a new order', async () => {
+    const newOrder = {
+      userId: 2,
+      products: [
+        { productId: 1, quantity: 1 },
+        { productId: 2, quantity: 2 }
+      ],
+      totalPrice: 59.99,
+      deliveryOption: "express"
+    };
+    const res = await request(app).post('/orders').send(newOrder);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty('id');
+  });
 
+  it('should return 404 if user has no orders', async () => {
+    const res = await request(app).get('/users/999/orders');
+    expect(res.statusCode).toEqual(404);
+  });
+});
 

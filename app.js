@@ -1,20 +1,14 @@
 const express = require('express');
+const userRoutes = require('./routes/users');
 const app = express();
 
+app.use(express.json());
+app.use('/users', userRoutes);
 
-const products = [
-  { id: 1, name: 'Product 1' },
-  { id: 2, name: 'Product 2' },
-];
+const PORT = process.env.PORT || 3000;
 
-app.get('/products', (req, res) => {
-  res.status(200).json({ products });
-});
-
-app.get('/products/:id', (req, res) => {
-  const product = products.find(p => p.id === parseInt(req.params.id, 10));
-  if (!product) return res.status(404).send('Product not found');
-  res.status(200).json(product);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
