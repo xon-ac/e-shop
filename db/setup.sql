@@ -3,3 +3,4 @@ DROP DATABASE IF EXISTS shop;
 
 CREATE DATABASE shop_test;
 CREATE DATABASE shop;
+dhkcb
